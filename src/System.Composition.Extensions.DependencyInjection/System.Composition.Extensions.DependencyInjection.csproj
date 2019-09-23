@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>System.Composition.Extensions.DependencyInjection</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/davidmilligan/System.Composition.Extensions.DependencyInjection</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/davidmilligan/System.Composition.Extensions.DependencyInjection.git</RepositoryUrl>
+    <Version>1.0.0.0</Version>
+    <Authors>David Milligan</Authors>
+    <Product>System.Composition.Extensions.DependencyInjection</Product>
+    <Title>MEF for ASP.NET Core</Title>
+    <Description>MEF (System.Composition) Integration for ASP.NET Core Dependency Injection</Description>
   </PropertyGroup>
 
   <ItemGroup>
