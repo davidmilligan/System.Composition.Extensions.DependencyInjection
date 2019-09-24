@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>System.Composition.Extensions.DependencyInjection</PackageId>
+    <PackageId>MefInjection</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/davidmilligan/System.Composition.Extensions.DependencyInjection</PackageProjectUrl>
     <RepositoryUrl>https://github.com/davidmilligan/System.Composition.Extensions.DependencyInjection.git</RepositoryUrl>
