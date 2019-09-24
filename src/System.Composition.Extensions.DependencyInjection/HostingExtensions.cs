@@ -7,10 +7,16 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace System.Composition.Extensions.DependencyInjection
 {
+    /// <summary>
+    /// Extension methods for setting up the host to use MEF (System.Composition) to resolve dependencies
+    /// </summary>
     public static class HostingExtension
     {
         private static MefServiceProviderFactory _factory;
 
+        /// <summary>
+        /// Sets up the host to use MEF (System.Composition) to resolve dependencies
+        /// </summary>
         public static IWebHostBuilder UseMef(this IWebHostBuilder hostBuilder)
         {
             _factory = new MefServiceProviderFactory();

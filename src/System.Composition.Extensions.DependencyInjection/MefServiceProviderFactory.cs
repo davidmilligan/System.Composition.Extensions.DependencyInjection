@@ -12,16 +12,22 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace System.Composition.Extensions.DependencyInjection
 {
+    /// <summary>
+    /// An implementation of IServiceProviderFactory that integrates MEF (System.Composition) into Asp.Net Core's DI framework, 
+    /// and allows configuring the MEF container in the Startup class
+    /// </summary>
     public class MefServiceProviderFactory : IServiceProviderFactory<ContainerConfiguration>
     {
         private IServiceCollection _services;
 
+        /// <inheritdoc/>
         public ContainerConfiguration CreateBuilder(IServiceCollection services)
         {
             _services = services;
             return new ContainerConfiguration();
         }
 
+        /// <inheritdoc/>
         public IServiceProvider CreateServiceProvider(ContainerConfiguration containerBuilder)
         {
             if (containerBuilder == null) throw new ArgumentNullException(nameof(containerBuilder));

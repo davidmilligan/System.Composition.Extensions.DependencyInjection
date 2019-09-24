@@ -8,13 +8,21 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace System.Composition.Extensions.DependencyInjection
 {
+    /// <summary>
+    /// An implementation of IServiceScopeFactory that uses MEF to resolve dependencies, with an optional fallback IServiceProvider 
+    /// for resolving dependcies not registered with MEF
+    /// </summary>
     public sealed class MefServiceProvider : MefServiceScope, IServiceScopeFactory
     {
         private readonly ExportFactory<CompositionContext> _requestScopeFactory;
         private IServiceProvider _fallback;
 
+        /// <inheritdoc/>
         protected override IServiceProvider Fallback => _fallback;
 
+        /// <summary>
+        /// Creates a new MefServiceProvider that uses the given MEF container to resolve dependencies
+        /// </summary>
         public MefServiceProvider(CompositionHost container)
             : base(new Export<CompositionContext>(container, container.Dispose), null, null)
         {
@@ -25,23 +33,38 @@ namespace System.Composition.Extensions.DependencyInjection
             _requestScopeFactory = (ExportFactory<CompositionContext>)container.GetExport(factoryContract);
         }
 
+        /// <summary>
+        /// Sets the ServiceProvider to use as a fallback for dependencies that can't be resolved by MEF
+        /// </summary>
         public void SetFallback(IServiceProvider fallback) => _fallback = fallback;
 
+        /// <inheritdoc/>
         public IServiceScope CreateScope() => new MefServiceScope(_requestScopeFactory.CreateExport(), this, _fallback?.GetService<IServiceScopeFactory>().CreateScope());
     }
 
+    /// <summary>
+    /// An implementation of IServiceScope that uses MEF to resolve dependencies, with an optional fallback IServiceProvider 
+    /// for resolving dependcies not registered with MEF
+    /// </summary>
     public class MefServiceScope : IServiceProvider, IServiceScope
     {
         private readonly IServiceScopeFactory _parentFactory;
         private readonly IServiceScope _fallback;
-        protected virtual IServiceProvider Fallback => _fallback.ServiceProvider;
-
-        protected CompositionContext CompositionScope => _compositionScope.Value;
-
-        public IServiceProvider ServiceProvider => this;
-
         private readonly Export<CompositionContext> _compositionScope;
 
+        /// <summary>
+        /// The ServiceProvider being used as a fallback for dependencies that can't be resolved by MEF
+        /// </summary>
+        protected virtual IServiceProvider Fallback => _fallback.ServiceProvider;
+
+        private CompositionContext CompositionScope => _compositionScope.Value;
+
+        /// <inheritdoc/>
+        public IServiceProvider ServiceProvider => this;
+
+        /// <summary>
+        /// Creates a new service scope from the given MEF sub-container and fallback service scope
+        /// </summary>
         public MefServiceScope(Export<CompositionContext> compositionScope, IServiceScopeFactory parent, IServiceScope fallback)
         {
             Trace.WriteLine("Scope Created");
@@ -50,6 +73,7 @@ namespace System.Composition.Extensions.DependencyInjection
             _fallback = fallback;
         }
 
+        /// <inheritdoc/>
         public object GetService(Type serviceType)
         {
             if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
@@ -91,6 +115,7 @@ namespace System.Composition.Extensions.DependencyInjection
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Dispose(true);

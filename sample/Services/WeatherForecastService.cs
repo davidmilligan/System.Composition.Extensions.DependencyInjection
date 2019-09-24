@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
 using System.Diagnostics;
+using System.Composition.Extensions.DependencyInjection;
 
 namespace sample.Services
 {
@@ -11,7 +12,7 @@ namespace sample.Services
         IEnumerable<WeatherForecast> GetForecasts();
     }
 
-    [Export(typeof(IWeatherForcastService)), Shared("Scoped")]
+    [Export(typeof(IWeatherForcastService)), Scoped]
     public class WeatherForcastService : IWeatherForcastService, IDisposable
     {
         private Guid _guid = Guid.NewGuid();
