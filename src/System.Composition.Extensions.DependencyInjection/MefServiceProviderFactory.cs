@@ -8,6 +8,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace System.Composition.Extensions.DependencyInjection
 {
@@ -25,13 +26,17 @@ namespace System.Composition.Extensions.DependencyInjection
         {
             if (containerBuilder == null) throw new ArgumentNullException(nameof(containerBuilder));
             var provider = new MefServiceProvider(containerBuilder.CreateContainer());
-            _services.AddSingleton<IServiceScopeFactory>(provider);
-            _services.AddSingleton<IServiceProvider>(provider);
-            var mefHttpContextFactory = new MefHttpContextFactory();
+            _services.Replace(ServiceDescriptor.Singleton<IServiceScopeFactory>(provider));
+            _services.Replace(ServiceDescriptor.Singleton<IServiceProvider>(provider));
+
             var defaultContextFactoryType = _services.First(t => t.ServiceType == typeof(IHttpContextFactory)).ImplementationType;
-            _services.AddSingleton<IHttpContextFactory>(mefHttpContextFactory);
+            if (defaultContextFactoryType.GetConstructor(new[] { typeof(IServiceProvider) }) != null)
+            {
+                var mefHttpContextFactory = new MefHttpContextFactory();
+                _services.AddSingleton<IHttpContextFactory>(mefHttpContextFactory);
+                mefHttpContextFactory.Initialize(defaultContextFactoryType, provider);
+            }
             provider.SetFallback(_services.BuildServiceProvider());
-            mefHttpContextFactory.Initialize(defaultContextFactoryType, provider);
             return provider;
         }
     }
