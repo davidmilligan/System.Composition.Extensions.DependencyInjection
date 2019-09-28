@@ -31,6 +31,8 @@ namespace System.Composition.Extensions.DependencyInjection
         public IServiceProvider CreateServiceProvider(ContainerConfiguration containerBuilder)
         {
             if (containerBuilder == null) throw new ArgumentNullException(nameof(containerBuilder));
+            containerBuilder.WithProvider(new DependencyInjectionProvider());
+            containerBuilder.WithAssembly(typeof(MefServiceScopeFallback).Assembly);
             var provider = new MefServiceProvider(containerBuilder.CreateContainer());
             _services.Replace(ServiceDescriptor.Singleton<IServiceScopeFactory>(provider));
             _services.Replace(ServiceDescriptor.Singleton<IServiceProvider>(provider));

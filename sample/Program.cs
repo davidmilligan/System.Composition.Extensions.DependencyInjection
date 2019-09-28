@@ -23,6 +23,7 @@ namespace sample
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((b, l) => l.AddConsole())
                 .UseMef()
                 .UseKestrel()
                 .UseStartup<Startup>();
