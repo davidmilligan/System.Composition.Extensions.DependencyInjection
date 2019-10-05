@@ -73,7 +73,6 @@ namespace System.Composition.Extensions.DependencyInjection
         /// </summary>
         public MefServiceScope(Export<CompositionContext> compositionScope, IServiceScopeFactory parent, IServiceScope fallback)
         {
-            Trace.WriteLine("Scope Created");
             _compositionScope = compositionScope;
             _parentFactory = parent;
             _fallback = fallback;
@@ -87,7 +86,6 @@ namespace System.Composition.Extensions.DependencyInjection
             {
                 _serviceScopeFallback = SetupScopeFallback();
             }
-            Trace.WriteLine($"GetService {serviceType.Name}");
             if (serviceType == typeof(IServiceProvider) || serviceType == typeof(MefServiceScope))
             {
                 return this;
@@ -129,7 +127,6 @@ namespace System.Composition.Extensions.DependencyInjection
             {
                 if (disposing)
                 {
-                    Trace.WriteLine("Scope Disposed");
                     _compositionScope.Dispose();
                     _fallback?.Dispose();
                 }
