@@ -4,6 +4,7 @@ using System.Composition;
 using System.Linq;
 using System.Diagnostics;
 using System.Composition.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace sample.Services
 {
@@ -22,9 +23,13 @@ namespace sample.Services
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        public WeatherForcastService()
+        public ILogger<WeatherForcastService> Logger { get; }
+
+        [ImportingConstructor]
+        public WeatherForcastService(ILogger<WeatherForcastService> logger)
         {
-            Trace.WriteLine($"WeatherForcastService {_guid} was created");
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Logger.LogInformation($"WeatherForcastService {_guid} was created");
         }
 
         public IEnumerable<WeatherForecast> GetForecasts()
@@ -41,7 +46,7 @@ namespace sample.Services
 
         public void Dispose()
         {
-            Trace.WriteLine($"WeatherForcastService {_guid} was disposed");
+            Logger.LogInformation($"WeatherForcastService {_guid} was disposed");
         }
 
         public override string ToString() => _guid.ToString();

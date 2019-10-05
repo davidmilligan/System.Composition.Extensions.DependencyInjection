@@ -15,9 +15,9 @@ namespace sample.Services
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, IWeatherForcastService service, ILoggerFactory logger)
+        public async Task Invoke(HttpContext httpContext, IWeatherForcastService service, ILogger<CustomMiddleware> logger)
         {
-            logger.CreateLogger<CustomMiddleware>().LogInformation($"Middleware service {service}");
+            logger.LogInformation($"Middleware service {service}");
             await _next(httpContext);
         }
     }

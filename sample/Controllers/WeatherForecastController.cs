@@ -15,12 +15,8 @@ namespace sample.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private ILogger _logger;
-
         [Import]
-        public ILoggerFactory LoggerFactory { get; set; }
-
-        public ILogger Logger => _logger ??= LoggerFactory.CreateLogger<WeatherForecastController>();
+        public ILogger<WeatherForecastController> Logger { get; set; }
 
         [Import]
         public IWeatherForcastService WeatherForcastService { get; set; }
