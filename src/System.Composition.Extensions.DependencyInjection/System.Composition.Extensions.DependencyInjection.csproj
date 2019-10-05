@@ -11,6 +11,9 @@
     <Product>System.Composition.Extensions.DependencyInjection</Product>
     <Title>MEF for ASP.NET Core</Title>
     <Description>MEF (System.Composition) Integration for ASP.NET Core Dependency Injection</Description>
+    <LangVersion>Latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

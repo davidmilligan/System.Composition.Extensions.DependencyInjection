@@ -18,7 +18,7 @@ namespace System.Composition.Extensions.DependencyInjection
     /// </summary>
     public class MefServiceProviderFactory : IServiceProviderFactory<ContainerConfiguration>
     {
-        private IServiceCollection _services;
+        private IServiceCollection? _services;
 
         /// <inheritdoc/>
         public ContainerConfiguration CreateBuilder(IServiceCollection services)
@@ -30,7 +30,8 @@ namespace System.Composition.Extensions.DependencyInjection
         /// <inheritdoc/>
         public IServiceProvider CreateServiceProvider(ContainerConfiguration containerBuilder)
         {
-            if (containerBuilder == null) throw new ArgumentNullException(nameof(containerBuilder));
+            if (containerBuilder == null) { throw new ArgumentNullException(nameof(containerBuilder)); }
+            if (_services == null) { throw new InvalidOperationException(); }
             containerBuilder.WithProvider(new DependencyInjectionProvider());
             containerBuilder.WithAssembly(typeof(MefServiceScopeFallback).Assembly);
             var provider = new MefServiceProvider(containerBuilder.CreateContainer());
@@ -40,9 +41,7 @@ namespace System.Composition.Extensions.DependencyInjection
             var defaultContextFactoryType = _services.First(t => t.ServiceType == typeof(IHttpContextFactory)).ImplementationType;
             if (defaultContextFactoryType.GetConstructor(new[] { typeof(IServiceProvider) }) != null)
             {
-                var mefHttpContextFactory = new MefHttpContextFactory();
-                _services.AddSingleton<IHttpContextFactory>(mefHttpContextFactory);
-                mefHttpContextFactory.Initialize(defaultContextFactoryType, provider);
+                _services.AddSingleton<IHttpContextFactory>(new MefHttpContextFactory(defaultContextFactoryType, provider));
             }
             provider.SetFallback(_services.BuildServiceProvider());
             return provider;
@@ -52,9 +51,9 @@ namespace System.Composition.Extensions.DependencyInjection
     // fix for bug in aspnetcore that results in our custom IServiceProvider not actually being used for requests
     internal class MefHttpContextFactory : IHttpContextFactory
     {
-        private Lazy<IHttpContextFactory> _defaultFactory;
+        private readonly Lazy<IHttpContextFactory> _defaultFactory;
 
-        public void Initialize(Type defaultFactoryType, IServiceProvider serviceProvider)
+        public MefHttpContextFactory(Type defaultFactoryType, IServiceProvider serviceProvider)
         {
             _defaultFactory = new Lazy<IHttpContextFactory>(() => (IHttpContextFactory)Activator.CreateInstance(defaultFactoryType, serviceProvider));
         }

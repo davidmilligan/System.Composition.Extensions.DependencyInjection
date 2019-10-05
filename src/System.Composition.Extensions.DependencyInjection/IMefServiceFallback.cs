@@ -8,18 +8,18 @@ namespace System.Composition.Extensions.DependencyInjection
     /// </summary>
     public interface IMefServiceFallback
     {
-        IServiceProvider FallbackServiceProvider { get; set; }
+        IServiceProvider? FallbackServiceProvider { get; set; }
     }
 
     [Export, Scoped]
     public class MefServiceScopeFallback : IMefServiceFallback
     {
-        public IServiceProvider FallbackServiceProvider { get; set; }
+        public IServiceProvider? FallbackServiceProvider { get; set; }
     }
 
     [Export, Shared]
     public class MefServiceRootFallback : IMefServiceFallback
     {
-        public IServiceProvider FallbackServiceProvider { get; set; }
+        public IServiceProvider? FallbackServiceProvider { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace System.Composition.Extensions.DependencyInjection
     /// </summary>
     public static class HostingExtension
     {
-        private static MefServiceProviderFactory _factory;
+        private static MefServiceProviderFactory? _factory;
 
         /// <summary>
         /// Sets up the host to use MEF (System.Composition) to resolve dependencies
