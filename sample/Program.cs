@@ -21,11 +21,13 @@ namespace sample
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureLogging((b, l) => l.AddConsole())
+        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
                 .UseMef()
-                .UseKestrel()
-                .UseStartup<Startup>();
+                .ConfigureLogging((b, l) => l.AddConsole())
+                .ConfigureWebHostDefaults(b => b
+                    .UseKestrel()
+                    .UseStartup<Startup>()
+                );
     }
 }
